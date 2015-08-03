@@ -55,14 +55,16 @@ def readMesh(path):
 			#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 			#I do not understand why the following line is necessary, is it just a verification?
 			#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+			### We just need the last 3 splitted elements so I used the command *splitted[j][-3:]* to extract the 3 last elements 
                         if len(splitted) == 4:
 				#Storing each Node line in a list. Each list elements contains 3 elements which are the node points.
-				points.append([splitted[1],splitted[2],splitted[3]])
+				points.append(splitted[-3:])
 				
 				#The following lines are for debugging purposes
 				#i = i + 1
 				#print "Original:", line
 				#print "Read/Stored by script:", points[i]
+				#print "Using -3", splitted[-3:]
 				#print
 		
 		if nodes == 1:
@@ -87,34 +89,34 @@ def readMesh(path):
 			#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 			# $Elements
 			# number-of-elements
-			# elm-number elm-type number-of-tags < tag > … node-number-list
+			# elm-number elm-type number-of-tags < tag > ... node-number-list
 			# $EndElements
 			#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 			### We just need the *node-number-list* so I used the command *cells[j][-3:]* to extract the last elements instead of separating 
 			### the 2 cases *len(splitted) == 7* or *len(splitted) == 8*
                         if len(splitted) == 7:
-				cells.append([splitted[4],splitted[5],splitted[6]])
+				cells.append(splitted[-3:])
 
 				#The following lines are for debugging pruposes
-				j = j + 1
-				print "Original:", line
-				print "Read/Store by script:", cells[i]
-				### Here is the piece of code that could replace the previous if, I am writing here for comparison purposes
-				print "Using -3", cells[j][-3:]
-				print 
+				#j = j + 1
+				#print "Original:", line
+				#print "Read/Store by script:", cells[j]
+				#print "Using -3", splitted[-3:]
+				#print 
+
 			### XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 			### XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-			# Also, why is it not necessary to keep the 4 first elements of the list this time ?
+			# I think that with *splitted[-3:]* we do not need to separate *len(splitted) == 7* or *len(splitted) == 8*
 			if len(splitted) == 8:
-				cells.append([splitted[5],splitted[6],splitted[7]])
+				cells.append(splitted[-3:])
 
 				#The following lines are for debugging pruposes
 				j = j + 1
-				print "Original:", line
-				print "Read/Store by script:", cells[i]
-				#### Here is the piece of code that could replace the previous if, I am writing here for comparison purposes
-				print "Using -3", cells[j][-3:]
-				print 
+				#print "Original:", line
+				#print "Read/Store by script:", cells[j]
+				#print "Using -3", splitted[-3:]
+				#print 
+
 		#If the line is the gmsh start-tag $Elements, the flag-variable *cell* is set to 2
 		#This way the next loop will start recording node values
 		#The first line of the $Elements block in gmsh contains the number of cell elements
