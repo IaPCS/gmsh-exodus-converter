@@ -1,5 +1,12 @@
 #encoding = utf8
-
+"""
+"Converter for gmesh meshs to Exodus II grids
+"@date 2015-08-03
+"@author me@diehlpk.de
+"@author 
+"
+"Usage: python convert.py -i mesh_file -o exodus_file
+"""
 from vtk import vtkExodusIIWriter
 from vtk import vtkUnstructuredGrid, VTK_TRIANGLE, VTK_TETRA
 from vtk import vtkIdList, vtkPoints
@@ -8,18 +15,25 @@ import sys
 import getopt
 
 def writeExodusIIGrid(path, points, cellNodes):
+    """ Methods writes the points and the cells in the Exodus II file format
+    "@param path The path including the file name to write the Exodus II mesh
+    "@param points The coordinates of the nodes of the grid
+    "@param cellNodes The indices of the points to define the triangle of the
+    "	mesh
+    """
     mesh = vtkUnstructuredGrid()
     vtk_points = vtkPoints()
     for point in points:
-        vtk_points.InsertNextPoint(float(point[0]), float(point[1]), float(point[2]))
+        vtk_points.InsertNextPoint(
+            float(point[0]), float(point[1]), float(point[2]))
     mesh.SetPoints(vtk_points)
 
     for cellNodes in cellNodes:
         pts = vtkIdList()
         num_local_nodes = len(cellNodes)
         pts.SetNumberOfIds(num_local_nodes)
-    for k, node_index in enumerate(cellNodes):
-        pts.InsertId(k, int(node_index))
+        for k, node_index in enumerate(cellNodes):
+            pts.InsertId(k, int(node_index))
         mesh.InsertNextCell(VTK_TRIANGLE, pts)
 
     writer = vtkExodusIIWriter()
@@ -27,7 +41,6 @@ def writeExodusIIGrid(path, points, cellNodes):
     writer.SetFileName(path)
     writer.SetInputData(mesh)
     writer.Write()
-
 
 def readMesh(path):
     """Methods reads a file in the mesh format and returns
@@ -57,8 +70,8 @@ def readMesh(path):
             line = re.sub("\n", "", line)
             splitted = line.split(' ')
             if len(splitted) == 4:
-                # Storing each Node line in a list. Each list
-                # elements contains 3 elements which are the node points.
+            # Storing each Node line in a list. Each list
+            # elements contains 3 elements which are the node points.
                 points.append(splitted[-3:])
 
         if nodes == 1:
@@ -121,14 +134,14 @@ def main(argv):
     output = ''
     help = "convert.py -i <inputfile> -o <outputfile>"
     if(len(sys.argv) != 5):
-        print help
-        sys.exit(1)
+    	print help
+    	sys.exit(1)
 
     try:
         opts, args = getopt.getopt(
             argv, "hi:o:r", ["ifile=", "ofile=", "rows"])
     except getopt.GetoptError:
-        print help
+    	print help
         sys.exit(0)
 
     for opt, arg in opts:
@@ -139,9 +152,8 @@ def main(argv):
             input = arg
         elif opt in ("-o", "--ofile"):
             output = arg
-
-	points , cells = readMesh(input)
-	writeExodusIIGrid(output,points,cells)	
+    points, cells = readMesh(input)
+    writeExodusIIGrid(output, points, cells)
 
 if __name__ == "__main__":
     main(sys.argv[1:])
