@@ -45,5 +45,6 @@ $EndMeshFormat
 
 ###### Example
 
-
-![Mesh](./doc/example_mesh_1.png?raw=true "Mesh generated with gmesh")
+Mesh generated with gmesh | Exodus geometry visualized with paraview
+:------------------------:|:----------------------------------------:
+![Mesh](./doc/example_mesh_1.png?raw=true "Mesh generated with gmesh")|
