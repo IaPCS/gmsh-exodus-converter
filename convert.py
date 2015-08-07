@@ -33,7 +33,7 @@ def writeExodusIIGrid(path, points, cellNodes):
         num_local_nodes = len(cellNodes)
         pts.SetNumberOfIds(num_local_nodes)
         for k, node_index in enumerate(cellNodes):
-            pts.InsertId(k, int(node_index))
+            pts.InsertId(k, int(node_index)-1)
         mesh.InsertNextCell(VTK_TRIANGLE, pts)
 
     writer = vtkExodusIIWriter()
