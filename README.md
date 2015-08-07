@@ -43,3 +43,7 @@ $EndMeshFormat
 ```
 `$EndElements` _[The end-tag **$EndElements** anounces that the Elements list is over]_
 
+###### Example
+
+
+![Mesh](./doc/example_mesh_1.png?raw=true "Mesh generated with gmesh")
