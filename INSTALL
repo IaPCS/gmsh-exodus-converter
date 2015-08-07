@@ -1,0 +1,4 @@
+1. Requirements
+
+VTK >= 6.0 (with python bindings)
+
