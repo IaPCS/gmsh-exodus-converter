@@ -5,6 +5,10 @@ Usage:
 
 python convert.py -i input.msh -o output.e
 
+## Requirements
+
+- VTK Toolkit >= 6.0 (with python bindings) 
+
 ## gmsh format
 Description of the gmsh format and how it works. An example can be found [here](https://github.com/diehlpk/gmsh-exodus-converter/blob/master/test_files/specimen_typeI_nogroups.msh).
 The _[brackets]_ contain comments expanations about each line. More complex files can be found, refer to the [gmsh documentation](http://www.geuz.org/gmsh/doc/texinfo/gmsh.html#MSH-ASCII-file-format) in that case.
@@ -47,7 +51,7 @@ $EndMeshFormat
 ```
 `$EndElements` _[The end-tag **$EndElements** anounces that the Elements list is over]_
 
-###### Example
+## Example
 
 Mesh generated with gmesh | Exodus geometry visualized with paraview
 :------------------------:|:----------------------------------------:
