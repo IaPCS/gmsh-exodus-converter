@@ -2,3 +2,12 @@
 
 VTK >= 6.0 (with python bindings)
 
+2. Installation
+
+2.1 Fedora >= 21
+
+# dnf install vtk vtk-python
+
+2.2 Ubuntu >= 14.04
+
+# apt-get install libvtk6 python-vtk6
