@@ -139,7 +139,7 @@ def main(argv):
 
     try:
         opts, args = getopt.getopt(
-            argv, "hi:o:r", ["ifile=", "ofile=", "rows"])
+            argv, "hi:o:", ["ifile=", "ofile="])
     except getopt.GetoptError:
     	print help
         sys.exit(0)
