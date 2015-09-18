@@ -3,7 +3,7 @@
 "Converter for gmesh meshs to Exodus II grids
 "@date 2015-08-03
 "@author me@diehlpk.de
-"@author 
+"@author joydisee@gmail.com 
 "
 "Usage: python convert.py -i mesh_file -o exodus_file
 """
