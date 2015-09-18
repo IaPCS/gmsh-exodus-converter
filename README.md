@@ -7,7 +7,14 @@ python convert.py -i input.msh -o output.e
 
 ## Requirements
 
-- VTK Toolkit >= 6.0 (with python bindings) 
+- VTK Toolkit >= 6.0 (with python bindings)
+
+## Supported gmsh element types
+
+2D
+
+- 2 3-node triangle 
+- 3 4-node quadrangle
 
 ## gmsh format
 Description of the gmsh format and how it works. An example can be found [here](https://github.com/diehlpk/gmsh-exodus-converter/blob/master/test_files/specimen_typeI_nogroups.msh).
