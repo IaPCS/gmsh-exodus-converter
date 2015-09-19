@@ -14,6 +14,14 @@ import re
 import sys
 import getopt
 
+def allUnique(x):
+    """ Method checks if all entries in x are unique
+    "@param x entries to be checked
+    "@return Is unique 
+    """
+    seen = set()
+    return not any(i in seen or seen.add(i) for i in x) 
+
 def writeExodusIIGrid(path, points, cellNodes):
     """ Methods writes the points and the cells in the Exodus II file format
     "@param path The path including the file name to write the Exodus II mesh
@@ -94,7 +102,9 @@ def readMesh(path):
             splitted = line.split(' ')
 
             if len(splitted) > 2:
-                cells.append(splitted[-3:])
+		if splitted[1] == 2:
+		   if allUnique(splitted[-3:0]):
+                      cells.append(splitted[-3:])
 
         # If the line is the gmsh start-tag $Elements, the flag-variable *cell* is set to 2
         # This way the next loop will start recording node values
@@ -117,9 +127,6 @@ def readMesh(path):
         sys.exit(1)
     if amountCells == -1:
         print "Error: No cells were found in the mesh file: " + str(path)
-        sys.exit(1)
-    if len(cells) != amountCells:
-        print "Error: Amount of readed cells != amount of cells:" + str(path)
         sys.exit(1)
     if len(points) != amount:
         print "Error: Amount of readed nodes != amount of nodes:" + str(path)
