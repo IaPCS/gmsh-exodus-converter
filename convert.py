@@ -1,39 +1,44 @@
 #encoding = utf8
 """
-"Converter for gmesh meshs to Exodus II grids
-"@date 2015-08-03
-"@author me@diehlpk.de
-"@author joydisee@gmail.com 
-"
-"Usage: python convert.py -i mesh_file -o exodus_file -t type
+Converter for gmesh meshs to Exodus II grids
+@date 2015-08-03
+@author me@diehlpk.de
+@author joydisee@gmail.com
+
+ Usage: python convert.py -i mesh_file -o exodus_file -t type
 """
 from vtk import vtkExodusIIWriter
-from vtk import vtkUnstructuredGrid, VTK_TRIANGLE, VTK_TETRA
+from vtk import vtkUnstructuredGrid, VTK_TRIANGLE, VTK_PIXEL, VTK_LINE
 from vtk import vtkIdList, vtkPoints
 import re
 import sys
 import getopt
 
-
 def allUnique(x):
-    """ Method checks if all entries in x are unique
-    "@param x entries to be checked
-    "@return Is unique 
+    """
+    Method checks if all entries in x are unique
+        x (list): entries to be checked
+
+    Returns:
+        bool: Is unique
+
     """
     seen = set()
     return not any(i in seen or seen.add(i) for i in x)
 
 
 def writeExodusIIGrid(path, points, cellNodes, case):
-    """ Methods writes the points and the cells in the Exodus II file format
-    "@param path The path including the file name to write the Exodus II mesh
-    "@param points The coordinates of the nodes of the grid
-    "@param cellNodes The indices of the points to define the triangle of the
-    "	mesh
-    "@param case The type of the vtk cells
-    "	1 = VTK_LINE
-    "	2 = VTK_TRIANGLE
-    "   3 = VTK_PIXEL 	
+    """ 
+    Methods writes the points and the cells in the Exodus II file format
+
+    Args:
+        path (string): The path where to write the Exodus II mesh
+        points (list): The coordinates of the nodes of the grid
+        cellNodes (list): The indices of the points to define the mesh
+        case (int) The type of the vtk cells
+                1 = VTK_LINE
+                2 = VTK_TRIANGLE
+                3 = VTK_PIXEL 	
     """
     mesh = vtkUnstructuredGrid()
     vtk_points = vtkPoints()
@@ -63,13 +68,17 @@ def writeExodusIIGrid(path, points, cellNodes, case):
 
 
 def readMesh(path, cellType):
-    """Methods reads a file in the mesh format and returns
-    "  all nodes and cells inside this file
-    "@param path The path to the mesh, including the file name
-    "@return points The coordiantes of the nodes
-    "@return cless The cells of the mesh
     """
+    Methods reads a file in the mesh format and returns
+    all nodes and cells inside this file
 
+    Args:
+        path (string:) The path to the mesh, including the file name
+
+    Returns:
+        points (list) The coordiantes of the nodes
+        cells (list) The cells of the mesh
+    """
     meshFile = open(path, 'r')
     nodes = 0
     cell = 0
@@ -79,8 +88,6 @@ def readMesh(path, cellType):
 
     points = []
     cells = []
-    i = -1
-    j = -1
 
     for line in meshFile:
 
@@ -97,12 +104,12 @@ def readMesh(path, cellType):
         if nodes == 1:
             nodes = 2
             amount = int(line)
-        # If the line is gmsh start-tag $Nodes, the flag-variable *nodes* is set to 2
-        # This way the next loop will start recording node values
+        # If the line is gmsh start-tag $Nodes, the flag-variable *nodes*
+        # is set to 2. This way the next loop will start recording node values
         if re.sub("\n", "", line) == "$Nodes":
             nodes = 1
-        # If the line is gmsh end-tag $Nodes, set the flag-variable *nodes* to
-        # 3
+        # If the line is gmsh end-tag $Nodes, set the flag-variable *nodes* 
+        # to 3
         if re.sub("\n", "", line) == "$EndNodes":
             nodes = 3
 
@@ -157,29 +164,32 @@ def readMesh(path, cellType):
 
 
 def main(argv):
-
+    """
+    Main	
+    """
     types = [int(1), int(2), int(3)]
-    input = ''
+    path = ''
     output = ''
     cellType = -1
-    help = "convert.py -i <inputfile> -o <outputfile> -t <type> \n 1 = 2-node line \n 2 = 3-node triangle \n 3 = 4-node quadrangle"
-    if(len(sys.argv) != 7):
-        print help
+    helpText = "convert.py -i <inputfile> -o <outputfile> -t <type> \n" \
+    "1 = 2-node line \n 2 = 3-node triangle \n 3 = 4-node quadrangle"
+    if len(sys.argv) != 7:
+        print helpText
         sys.exit(1)
 
     try:
         opts, args = getopt.getopt(
             argv, "hi:o:t:", ["ifile=", "ofile=", "type="])
     except getopt.GetoptError:
-        print help
+        print helpText
         sys.exit(0)
 
     for opt, arg in opts:
         if opt == '-h':
-            print help
+            print helpText
             sys.exit(0)
         elif opt in ("-i", "--ifile"):
-            input = arg
+            path = arg
         elif opt in ("-o", "--ofile"):
             output = arg
         elif opt in ("-t", "--type"):
@@ -187,7 +197,7 @@ def main(argv):
     if cellType not in types:
         print "Error: Only geometrical type 1,2,3 are supported see convert.py -h"
         sys.exit(1)
-    points, cells = readMesh(input, cellType)
+    points, cells = readMesh(path, cellType)
     writeExodusIIGrid(output, points, cells, cellType)
 
 if __name__ == "__main__":
