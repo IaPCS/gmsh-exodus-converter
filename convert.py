@@ -5,7 +5,7 @@
 "@author me@diehlpk.de
 "@author joydisee@gmail.com 
 "
-"Usage: python convert.py -i mesh_file -o exodus_file
+"Usage: python convert.py -i mesh_file -o exodus_file -t type
 """
 from vtk import vtkExodusIIWriter
 from vtk import vtkUnstructuredGrid, VTK_TRIANGLE, VTK_TETRA
@@ -14,20 +14,26 @@ import re
 import sys
 import getopt
 
+
 def allUnique(x):
     """ Method checks if all entries in x are unique
     "@param x entries to be checked
     "@return Is unique 
     """
     seen = set()
-    return not any(i in seen or seen.add(i) for i in x) 
+    return not any(i in seen or seen.add(i) for i in x)
 
-def writeExodusIIGrid(path, points, cellNodes):
+
+def writeExodusIIGrid(path, points, cellNodes, case):
     """ Methods writes the points and the cells in the Exodus II file format
     "@param path The path including the file name to write the Exodus II mesh
     "@param points The coordinates of the nodes of the grid
     "@param cellNodes The indices of the points to define the triangle of the
     "	mesh
+    "@param case The type of the vtk cells
+    "	1 = VTK_LINE
+    "	2 = VTK_TRIANGLE
+    "   3 = VTK_PIXEL 	
     """
     mesh = vtkUnstructuredGrid()
     vtk_points = vtkPoints()
@@ -41,16 +47,22 @@ def writeExodusIIGrid(path, points, cellNodes):
         num_local_nodes = len(cellNodes)
         pts.SetNumberOfIds(num_local_nodes)
         for k, node_index in enumerate(cellNodes):
-            pts.InsertId(k, int(node_index)-1)
-        mesh.InsertNextCell(VTK_TRIANGLE, pts)
+            pts.InsertId(k, int(node_index) - 1)
 
+        if case == 1:
+            mesh.InsertNextCell(VTK_LINE, pts)
+        if case == 2:
+            mesh.InsertNextCell(VTK_TRIANGLE, pts)
+        if case == 3:
+            mesh.InsertNextCell(VTK_PIXEL, pts)
     writer = vtkExodusIIWriter()
     writer.WriteAllTimeStepsOn()
     writer.SetFileName(path)
     writer.SetInputData(mesh)
     writer.Write()
 
-def readMesh(path):
+
+def readMesh(path, cellType):
     """Methods reads a file in the mesh format and returns
     "  all nodes and cells inside this file
     "@param path The path to the mesh, including the file name
@@ -78,8 +90,8 @@ def readMesh(path):
             line = re.sub("\n", "", line)
             splitted = line.split(' ')
             if len(splitted) == 4:
-            # Storing each Node line in a list. Each list
-            # elements contains 3 elements which are the node points.
+                # Storing each Node line in a list. Each list
+                # elements contains 3 elements which are the node points.
                 points.append(splitted[-3:])
 
         if nodes == 1:
@@ -102,10 +114,19 @@ def readMesh(path):
             splitted = line.split(' ')
 
             if len(splitted) > 2:
-		if splitted[1] == 2:
-		   if allUnique(splitted[-3:0]):
-                      cells.append(splitted[-3:])
+                # Case: 1 - 2-node line
+                if splitted[1] == 1 and cellType == 1:
+                    if allUnique(splitted[-2:]):
+                        cells.append(splitted[-2:])
+                # Case: 2 - 3-node triangle
+                if splitted[1] == 2 and cellType == 2:
+                    if allUnique(splitted[-3:]):
+                        cells.append(splitted[-3:])
 
+                # Case: 3 - 4-node quadrangle
+                if splitted[1] == 3 and cellType == 3:
+                    if allUnique(splitted[-4:]):
+                        cells.append(splitted[-4:])
         # If the line is the gmsh start-tag $Elements, the flag-variable *cell* is set to 2
         # This way the next loop will start recording node values
         # The first line of the $Elements block in gmsh contains the number of
@@ -137,18 +158,20 @@ def readMesh(path):
 
 def main(argv):
 
+    types = [int(1), int(2), int(3)]
     input = ''
     output = ''
-    help = "convert.py -i <inputfile> -o <outputfile>"
-    if(len(sys.argv) != 5):
-    	print help
-    	sys.exit(1)
+    cellType = -1
+    help = "convert.py -i <inputfile> -o <outputfile> -t <type> \n 1 = 2-node line \n 2 = 3-node triangle \n 3 = 4-node quadrangle"
+    if(len(sys.argv) != 7):
+        print help
+        sys.exit(1)
 
     try:
         opts, args = getopt.getopt(
-            argv, "hi:o:", ["ifile=", "ofile="])
+            argv, "hi:o:t:", ["ifile=", "ofile=", "type="])
     except getopt.GetoptError:
-    	print help
+        print help
         sys.exit(0)
 
     for opt, arg in opts:
@@ -159,8 +182,13 @@ def main(argv):
             input = arg
         elif opt in ("-o", "--ofile"):
             output = arg
-    points, cells = readMesh(input)
-    writeExodusIIGrid(output, points, cells)
+        elif opt in ("-t", "--type"):
+            cellType = int(arg)
+    if cellType not in types:
+        print "Error: Only geometrical type 1,2,3 are supported see convert.py -h"
+        sys.exit(1)
+    points, cells = readMesh(input, cellType)
+    writeExodusIIGrid(output, points, cells, cellType)
 
 if __name__ == "__main__":
     main(sys.argv[1:])
