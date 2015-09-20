@@ -8,7 +8,7 @@ Converter for gmesh meshs to Exodus II grids
  Usage: python convert.py -i mesh_file -o exodus_file -t type
 """
 from vtk import vtkExodusIIWriter
-from vtk import vtkUnstructuredGrid, VTK_TRIANGLE, VTK_PIXEL, VTK_LINE
+from vtk import vtkUnstructuredGrid, VTK_TRIANGLE, VTK_QUAD, VTK_LINE
 from vtk import vtkIdList, vtkPoints
 import re
 import sys
@@ -38,7 +38,7 @@ def writeExodusIIGrid(path, points, cellNodes, case):
         case (int) The type of the vtk cells
                 1 = VTK_LINE
                 2 = VTK_TRIANGLE
-                3 = VTK_PIXEL 	
+                3 = VTK_QUAD 	
     """
     mesh = vtkUnstructuredGrid()
     vtk_points = vtkPoints()
@@ -54,12 +54,12 @@ def writeExodusIIGrid(path, points, cellNodes, case):
         for k, node_index in enumerate(cellNodes):
             pts.InsertId(k, int(node_index) - 1)
 
-        if case == 1:
+        if case == '1':
             mesh.InsertNextCell(VTK_LINE, pts)
-        if case == 2:
+        if case == '2':
             mesh.InsertNextCell(VTK_TRIANGLE, pts)
-        if case == 3:
-            mesh.InsertNextCell(VTK_PIXEL, pts)
+        if case == '3':
+            mesh.InsertNextCell(VTK_QUAD, pts)
     writer = vtkExodusIIWriter()
     writer.WriteAllTimeStepsOn()
     writer.SetFileName(path)
@@ -88,7 +88,7 @@ def readMesh(path, cellType):
 
     points = []
     cells = []
-
+    
     for line in meshFile:
 
         # Reads lines between gmsh start-tag $Nodes and end-tag $EndNodes
@@ -122,16 +122,16 @@ def readMesh(path, cellType):
 
             if len(splitted) > 2:
                 # Case: 1 - 2-node line
-                if splitted[1] == 1 and cellType == 1:
+                if splitted[1] == '1' and cellType == '1':
                     if allUnique(splitted[-2:]):
                         cells.append(splitted[-2:])
                 # Case: 2 - 3-node triangle
-                if splitted[1] == 2 and cellType == 2:
-                    if allUnique(splitted[-3:]):
+                if splitted[1] == '2' and cellType == '2':
+		     if allUnique(splitted[-3:]):
                         cells.append(splitted[-3:])
 
                 # Case: 3 - 4-node quadrangle
-                if splitted[1] == 3 and cellType == 3:
+                if splitted[1] == '3' and cellType == '3':
                     if allUnique(splitted[-4:]):
                         cells.append(splitted[-4:])
         # If the line is the gmsh start-tag $Elements, the flag-variable *cell* is set to 2
@@ -167,7 +167,7 @@ def main(argv):
     """
     Main	
     """
-    types = [int(1), int(2), int(3)]
+    types = ['1','2','3']
     path = ''
     output = ''
     cellType = -1
@@ -193,7 +193,7 @@ def main(argv):
         elif opt in ("-o", "--ofile"):
             output = arg
         elif opt in ("-t", "--type"):
-            cellType = int(arg)
+            cellType = arg
     if cellType not in types:
         print "Error: Only geometrical type 1,2,3 are supported see convert.py -h"
         sys.exit(1)
