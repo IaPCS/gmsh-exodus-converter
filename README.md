@@ -3,11 +3,11 @@ Converts a mesh written with gmsh to the exodus II format to use it with Peridig
 
 Usage:
 
-python convert.py -i input.msh -o output.e
+python convert.py -i input.msh -o output.g t <type>
 
 ## Requirements
 
-- VTK Toolkit >= 6.0 (with python bindings)
+- VTK Toolkit >= 5.8 (with python bindings)
 
 ## Supported gmsh element types
 
