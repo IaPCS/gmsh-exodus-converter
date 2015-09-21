@@ -3,13 +3,17 @@ Converts a mesh written with gmsh to the exodus II format to use it with Peridig
 
 Usage:
 
-python convert.py -i input.msh -o output.g t <type>
+`python convert.py -i input.msh -o output.g -t element_type`
+
+element_type is an integer (see **Supported gmsh element types** section)
 
 ## Requirements
 
 - VTK Toolkit >= 5.8 (with python bindings)
 
 ## Supported gmsh element types
+
+The `input.msh` file must be generated with Gmsh. Currently, only the following elements are supported:
 
 2D
 
