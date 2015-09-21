@@ -3,16 +3,37 @@
 Converter for gmesh meshs to Exodus II grids
 @date 2015-08-03
 @author me@diehlpk.de
-@author joydisee@gmail.com
+@author ilyass.tabiai@gmail.com
 
  Usage: python convert.py -i mesh_file -o exodus_file -t type
 """
 from vtk import vtkExodusIIWriter
 from vtk import vtkUnstructuredGrid, VTK_TRIANGLE, VTK_QUAD, VTK_LINE
 from vtk import vtkIdList, vtkPoints
+from vtk import vtkVersion
 import re
 import sys
 import getopt
+
+def adapt_vtkversion_SetInput( mesh_x, writer_ExodusII ):
+    """
+    Method compensates for python-vtk for backward incompatiblity
+    Checks the vtk version and uses SetInput() for version 5
+    or SetInputData() for version 6
+    
+    Args: mesh object, writerExodusII
+    
+    Returns:
+        func: SetInput() for python-vtk version 5
+                or SetInpurData() for python-vtk6
+    """
+    vtk_version = vtkVersion.GetVTKSourceVersion()
+    vtk_version_split = re.findall(r"\b\d+\b", vtk_version)
+    print vtk_version_split[0]
+    if int(vtk_version_split[0]) == 5:
+        return writer_ExodusII.SetInput(mesh_x)
+    else:
+        return writer_ExodusII.SetInputData(mesh_x)
 
 def allUnique(x):
     """
@@ -63,7 +84,7 @@ def writeExodusIIGrid(path, points, cellNodes, case):
     writer = vtkExodusIIWriter()
     writer.WriteAllTimeStepsOn()
     writer.SetFileName(path)
-    writer.SetInputData(mesh)
+    adapt_vtkversion_SetInput( mesh, writer )
     writer.Write()
 
 
