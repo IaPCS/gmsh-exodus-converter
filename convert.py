@@ -15,7 +15,7 @@ import re
 import sys
 import getopt
 
-def adapt_vtkversion_SetInput( mesh_x, writer_ExodusII ):
+def adapt_vtkversion_SetInput(mesh_x, writer_ExodusII):
     """
     Method compensates for python-vtk for backward incompatiblity
     Checks the vtk version and uses SetInput() for version 5
@@ -82,12 +82,12 @@ def writeExodusIIGrid(path, points, cellNodes, case):
             mesh.InsertNextCell(VTK_TRIANGLE, pts)
         if case == '3':
             mesh.InsertNextCell(VTK_QUAD, pts)
-	if case == '4':
-	    mesh.InsertNextCell(VTK_TETRA, pts)
+        if case == '4':
+            mesh.InsertNextCell(VTK_TETRA, pts)
     writer = vtkExodusIIWriter()
     writer.WriteAllTimeStepsOn()
     writer.SetFileName(path)
-    adapt_vtkversion_SetInput( mesh, writer )
+    adapt_vtkversion_SetInput(mesh, writer)
     writer.Write()
 
 
@@ -112,7 +112,7 @@ def readMesh(path, cellType):
 
     points = []
     cells = []
-    
+     
     for line in meshFile:
 
         # Reads lines between gmsh start-tag $Nodes and end-tag $EndNodes
@@ -195,7 +195,7 @@ def main(argv):
     """
     Main	
     """
-    types = ['1','2','3','4']
+    types = ['1', '2', '3', '4']
     path = ''
     output = ''
     cellType = -1
