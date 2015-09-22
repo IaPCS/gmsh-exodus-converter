@@ -1,5 +1,5 @@
 # gmsh-exodus-converter
-Converts a mesh written with gmsh to the exodus II format to use it with Peridigm
+Converts a mesh written with gmsh to the exodus II format, which is used in common simulations tools, like [Peridigm](https://peridigm.sandia.gov/)
 
 Usage:
 
