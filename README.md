@@ -17,8 +17,9 @@ The `input.msh` file must be generated with Gmsh. Currently, only the following 
 
 2D
 
-- 2 3-node triangle 
-- 3 4-node quadrangle
+- 2 = 3-node triangle 
+- 3 = 4-node quadrangle
+- 4 = 4-node tetrahedron
 
 ## gmsh format
 Description of the gmsh format and how it works. An example can be found [here](https://github.com/diehlpk/gmsh-exodus-converter/blob/master/test_files/specimen_typeI_nogroups.msh).

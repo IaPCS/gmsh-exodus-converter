@@ -8,7 +8,7 @@ Converter for gmesh meshs to Exodus II grids
  Usage: python convert.py -i mesh_file -o exodus_file -t type
 """
 from vtk import vtkExodusIIWriter
-from vtk import vtkUnstructuredGrid, VTK_TRIANGLE, VTK_QUAD, VTK_LINE
+from vtk import vtkUnstructuredGrid, VTK_TRIANGLE, VTK_QUAD, VTK_LINE, VTK_TETRA
 from vtk import vtkIdList, vtkPoints
 from vtk import vtkVersion
 import re
@@ -59,7 +59,8 @@ def writeExodusIIGrid(path, points, cellNodes, case):
         case (int) The type of the vtk cells
                 1 = VTK_LINE
                 2 = VTK_TRIANGLE
-                3 = VTK_QUAD 	
+                3 = VTK_QUAD
+		4 =  	
     """
     mesh = vtkUnstructuredGrid()
     vtk_points = vtkPoints()
@@ -81,6 +82,8 @@ def writeExodusIIGrid(path, points, cellNodes, case):
             mesh.InsertNextCell(VTK_TRIANGLE, pts)
         if case == '3':
             mesh.InsertNextCell(VTK_QUAD, pts)
+	if case == '4':
+	    mesh.InsertNextCell(VTK_TETRA, pts)
     writer = vtkExodusIIWriter()
     writer.WriteAllTimeStepsOn()
     writer.SetFileName(path)
@@ -155,6 +158,10 @@ def readMesh(path, cellType):
                 if splitted[1] == '3' and cellType == '3':
                     if allUnique(splitted[-4:]):
                         cells.append(splitted[-4:])
+                # Case: 4 - 4-node tetrahedron
+                if splitted[1] == '4' and cellType == '4':
+                    if allUnique(splitted[-4:]):
+                        cells.append(splitted[-4:])
         # If the line is the gmsh start-tag $Elements, the flag-variable *cell* is set to 2
         # This way the next loop will start recording node values
         # The first line of the $Elements block in gmsh contains the number of
@@ -188,7 +195,7 @@ def main(argv):
     """
     Main	
     """
-    types = ['1','2','3']
+    types = ['1','2','3','4']
     path = ''
     output = ''
     cellType = -1
