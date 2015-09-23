@@ -15,27 +15,28 @@ import re
 import sys
 import getopt
 
-def adapt_vtkversion_SetInput(mesh_x, writer_ExodusII):
+
+def setInput(meshX, writerExodusII):
     """
     Method compensates for python-vtk for backward incompatiblity
     Checks the vtk version and uses SetInput() for version 5
     or SetInputData() for version 6
-    
+
     Args: mesh object, writerExodusII
-    
+
     Returns:
         func: SetInput() for python-vtk version 5
                 or SetInpurData() for python-vtk6
     """
     vtk_version = vtkVersion.GetVTKSourceVersion()
     vtk_version_split = re.findall(r"\b\d+\b", vtk_version)
-    print vtk_version_split[0]
     if int(vtk_version_split[0]) == 5:
-        return writer_ExodusII.SetInput(mesh_x)
+        return writerExodusII.SetInput(meshX)
     else:
-        return writer_ExodusII.SetInputData(mesh_x)
+        return writerExodusII.SetInputData(meshX)
 
-def allUnique(x):
+
+def allUnique(values):
     """
     Method checks if all entries in x are unique
         x (list): entries to be checked
@@ -45,7 +46,7 @@ def allUnique(x):
 
     """
     seen = set()
-    return not any(i in seen or seen.add(i) for i in x)
+    return not any(i in seen or seen.add(i) for i in values)
 
 
 def writeExodusIIGrid(path, points, cellNodes, case):
@@ -60,7 +61,7 @@ def writeExodusIIGrid(path, points, cellNodes, case):
                 1 = VTK_LINE
                 2 = VTK_TRIANGLE
                 3 = VTK_QUAD
-		4 =  	
+                4 = VTK_TETRA 	
     """
     mesh = vtkUnstructuredGrid()
     vtk_points = vtkPoints()
@@ -87,7 +88,7 @@ def writeExodusIIGrid(path, points, cellNodes, case):
     writer = vtkExodusIIWriter()
     writer.WriteAllTimeStepsOn()
     writer.SetFileName(path)
-    adapt_vtkversion_SetInput(mesh, writer)
+    setInput(mesh, writer)
     writer.Write()
 
 
@@ -112,34 +113,28 @@ def readMesh(path, cellType):
 
     points = []
     cells = []
-     
+
     for line in meshFile:
 
-        # Reads lines between gmsh start-tag $Nodes and end-tag $EndNodes
-        # The nodes variable is a flag
         if nodes == 2:
             line = re.sub("\n", "", line)
             splitted = line.split(' ')
             if len(splitted) == 4:
-                # Storing each Node line in a list. Each list
-                # elements contains 3 elements which are the node points.
+                # Extraction the coordiantes
                 points.append(splitted[-3:])
 
         if nodes == 1:
+            # Amount of coordiantes found
             nodes = 2
             amount = int(line)
-        # If the line is gmsh start-tag $Nodes, the flag-variable *nodes*
-        # is set to 2. This way the next loop will start recording node values
+        # Node are listed
         if re.sub("\n", "", line) == "$Nodes":
             nodes = 1
-        # If the line is gmsh end-tag $Nodes, set the flag-variable *nodes* 
-        # to 3
+        # All nodes are read
         if re.sub("\n", "", line) == "$EndNodes":
             nodes = 3
 
-        # The pattern is similar to the previous part for nodes
-        # A flag-variable *cell* is setup to determine if we are in the
-        # $Elements block of the gmesh or not
+        # Reading the cell information
         if cell == 2:
             line = re.sub("\n", "", line)
             splitted = line.split(' ')
@@ -151,7 +146,7 @@ def readMesh(path, cellType):
                         cells.append(splitted[-2:])
                 # Case: 2 - 3-node triangle
                 if splitted[1] == '2' and cellType == '2':
-		     if allUnique(splitted[-3:]):
+                    if allUnique(splitted[-3:]):
                         cells.append(splitted[-3:])
 
                 # Case: 3 - 4-node quadrangle
@@ -162,19 +157,14 @@ def readMesh(path, cellType):
                 if splitted[1] == '4' and cellType == '4':
                     if allUnique(splitted[-4:]):
                         cells.append(splitted[-4:])
-        # If the line is the gmsh start-tag $Elements, the flag-variable *cell* is set to 2
-        # This way the next loop will start recording node values
-        # The first line of the $Elements block in gmsh contains the number of
-        # cell elements
+        # Amount of cells found
         if cell == 1:
             cell = 2
             amountCells = int(line)
-        # If the line is gmsh start-tag $Elements, the flag-variable *cell* is set to 1
-        # This way the next loop will start recording node values
+        # Cell information tag found
         if re.sub("\n", "", line) == "$Elements":
             cell = 1
-        # If the line is gmsh start-tag $Elements, the flag-variable *cell* is set to 3
-        # This way the next loop will stop recording node values
+        # Cell information closing tag found
         if re.sub("\n", "", line) == "$EndElements":
             cell = 3
     # ErrorHandling
@@ -200,7 +190,7 @@ def main(argv):
     output = ''
     cellType = -1
     helpText = "convert.py -i <inputfile> -o <outputfile> -t <type> \n" \
-    "1 = 2-node line \n 2 = 3-node triangle \n 3 = 4-node quadrangle"
+        "1 = 2-node line \n 2 = 3-node triangle \n 3 = 4-node quadrangle"
     if len(sys.argv) != 7:
         print helpText
         sys.exit(1)
