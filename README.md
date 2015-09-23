@@ -19,6 +19,9 @@ The `input.msh` file must be generated with Gmsh. Currently, only the following 
 
 - 2 = 3-node triangle 
 - 3 = 4-node quadrangle
+
+3D
+
 - 4 = 4-node tetrahedron
 
 ## gmsh format
@@ -49,11 +52,13 @@ $EndMeshFormat
 
 ###### Elements
 
+For detailed information, check [this section of gmsh documentation](http://geuz.org/gmsh/doc/texinfo/gmsh.html#MSH-ASCII-file-format)
+
 `$Elements` _[The start-tag **$Elements** anounces that the elements are going to be listed]_
 
 `729` _[Number of elements]_
 
-`1 15 2 0 1 1` _[Element number] [Elmnt type] [Elmnt tag] [Elmnt point 1] [Elmnt pt 2] [Elmnt pt 3]_
+`1 15 2 0 1 1` _[Element number] [Elmnt type] [Elmnt physical entity tag] [Elmnt Geometry point] [Vertex tag]_
 ```
 2 15 2 0 2 2
 3 15 2 0 3 3
@@ -62,6 +67,14 @@ $EndMeshFormat
 ...
 ```
 `$EndElements` _[The end-tag **$EndElements** anounces that the Elements list is over]_
+
+###### Element types
+
+- 1  = 2-node line
+- 2  = 3-node line
+- 3  = 4-node quadrangle
+- 4  = 4-node tetrahedron
+- 15 = 1-node point
 
 ## Example
 
