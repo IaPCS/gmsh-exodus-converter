@@ -78,6 +78,14 @@ For detailed information, check [this section of gmsh documentation](http://geuz
 
 ## Example
 
+2D
+
 Mesh generated with gmesh | Exodus geometry visualized with paraview
 :------------------------:|:----------------------------------------:
 ![Mesh](./doc/example_mesh_1.png?raw=true "Mesh generated with gmesh")|![Exodus](./doc/example_exodus_1.png?raw=true "Mesh generated with gmesh")
+
+3D
+
+Mesh generated with gmesh | Exodus geometry visualized with paraview
+:------------------------:|:----------------------------------------:
+![Mesh](./doc/3D_Cube_gmsh.PNG?raw=true "Mesh generated with gmesh")|![Exodus](./doc/3D_Cube_exodusII.PNG?raw=true "Mesh generated with gmesh")
