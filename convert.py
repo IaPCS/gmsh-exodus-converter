@@ -87,6 +87,9 @@ def writeExodusIIGrid(path, points, cellNodes, case):
             mesh.InsertNextCell(VTK_TETRA, pts)
     writer = vtkExodusIIWriter()
     writer.WriteAllTimeStepsOn()
+    writer.WriteOutBlockIdArrayOn()
+    writer.WriteOutGlobalNodeIdArrayOn()
+    writer.WriteOutGlobalElementIdArrayOn()
     writer.SetFileName(path)
     setInput(mesh, writer)
     writer.Write()
@@ -213,7 +216,7 @@ def main(argv):
         elif opt in ("-t", "--type"):
             cellType = arg
     if cellType not in types:
-        print "Error: Only geometrical type 1,2,3 are supported see convert.py -h"
+        print "Error: Only geometrical type 1,2,3,4 are supported see convert.py -h"
         sys.exit(1)
     points, cells = readMesh(path, cellType)
     writeExodusIIGrid(output, points, cells, cellType)
