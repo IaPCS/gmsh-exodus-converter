@@ -172,13 +172,13 @@ def readMesh(path, cellType):
             cell = 3
     # ErrorHandling
     if amount == -1:
-        print "Error: No nodes where found in the mesh file: " + str(path)
+        print("Error: No nodes where found in the mesh file: " + str(path))
         sys.exit(1)
     if amountCells == -1:
-        print "Error: No cells were found in the mesh file: " + str(path)
+        print("Error: No cells were found in the mesh file: " + str(path))
         sys.exit(1)
     if len(points) != amount:
-        print "Error: Amount of readed nodes != amount of nodes:" + str(path)
+        print("Error: Amount of readed nodes != amount of nodes:" + str(path))
         sys.exit(1)
 
     return points, cells
@@ -195,19 +195,19 @@ def main(argv):
     helpText = "convert.py -i <inputfile> -o <outputfile> -t <type> \n" \
         "1 = 2-node line \n 2 = 3-node triangle \n 3 = 4-node quadrangle"
     if len(sys.argv) != 7:
-        print helpText
+        print(helpText)
         sys.exit(1)
 
     try:
         opts, args = getopt.getopt(
             argv, "hi:o:t:", ["ifile=", "ofile=", "type="])
     except getopt.GetoptError:
-        print helpText
+        print(helpText)
         sys.exit(0)
 
     for opt, arg in opts:
         if opt == '-h':
-            print helpText
+            print(helpText)
             sys.exit(0)
         elif opt in ("-i", "--ifile"):
             path = arg
@@ -216,7 +216,7 @@ def main(argv):
         elif opt in ("-t", "--type"):
             cellType = arg
     if cellType not in types:
-        print "Error: Only geometrical type 1,2,3,4 are supported see convert.py -h"
+        print("Error: Only geometrical type 1,2,3,4 are supported see convert.py -h")
         sys.exit(1)
     points, cells = readMesh(path, cellType)
     writeExodusIIGrid(output, points, cells, cellType)
