@@ -1,7 +1,13 @@
 # gmsh-exodus-converter
 Converts a mesh written with gmsh to the exodus II format, which is used in common simulations tools, like [Peridigm](https://peridigm.sandia.gov/)
 
-Usage:
+## Citing the code
+
+Are you using this code for research purposes? Please take the time to cite it using this DOI:
+
+[![DOI](https://zenodo.org/badge/40018984.svg)](https://zenodo.org/badge/latestdoi/40018984)
+
+## Usage:
 
 `python convert.py -i input.msh -o output.g -t element_type`
 
