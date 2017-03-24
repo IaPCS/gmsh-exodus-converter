@@ -95,7 +95,6 @@ Mesh generated with gmesh | Exodus geometry visualized with paraview
 Mesh generated with gmesh | Exodus geometry visualized with paraview
 :------------------------:|:----------------------------------------:
 ![Mesh](./doc/3D_Cube_gmsh.png?raw=true "Mesh generated with gmesh")|![Exodus](./doc/3D_Cube_exodusII.png?raw=true "Mesh generated with gmesh")
-:------------------------:|:----------------------------------------:
 ![Mesh](./doc/cylind_mesh.png?raw=true "Mesh generated with gmesh")|![Exodus](./doc/cylind_exodus.png?raw=true "Mesh generated with gmesh")
 
 
