@@ -17,7 +17,7 @@ element_type is an integer (see **Supported gmsh element types** section)
 
 - VTK Toolkit >= 5.8 (with python bindings)
 
-If you are using *Ubuntu*, you *must* use the _python-vtk_ package (`sudo apt-get install python-vtk`). There is a bug with the _python-vtk6_ package which provokes a segmentation fault.
+If you are using **Ubuntu**, you **must** use the _python-vtk_ package (`sudo apt-get install python-vtk`). There is a bug with the _python-vtk6_ package which provokes a segmentation fault.
 (More information about it here: https://gitlab.kitware.com/vtk/vtk/issues/16009)
 
 ## Supported gmsh element types
