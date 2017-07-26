@@ -10,4 +10,6 @@ VTK >= 6.0 (with python bindings)
 
 2.2 Ubuntu >= 14.04
 
-# apt-get install libvtk6 python-vtk6
+# apt-get install libvtk6 python-vtk
+
+(Be careful not to install python-vtk6, there is a known bug with it.)
