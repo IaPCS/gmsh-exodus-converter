@@ -73,8 +73,8 @@ class GmshExodusConverter():
         		for k, node_index in enumerate(cellNodes):
             			pts.InsertId(k, int(node_index) - 1)
 
-        		if cellTypes[i] == 1:
-            			mesh.InsertNextCell(VTK_LINE, pts)
+        		#if cellTypes[i] == 1:
+            		#	mesh.InsertNextCell(VTK_LINE, pts)
         		if cellTypes[i] == 2:
             			mesh.InsertNextCell(VTK_TRIANGLE, pts)
         		if cellTypes[i] == 3:
@@ -84,9 +84,9 @@ class GmshExodusConverter():
         		i += 1
             	writer = vtkExodusIIWriter()
             	writer.WriteAllTimeStepsOn()
-            	writer.WriteOutBlockIdArrayOn()
+            	#writer.WriteOutBlockIdArrayOn()
             	writer.WriteOutGlobalNodeIdArrayOn()
-            	writer.WriteOutGlobalElementIdArrayOn()
+            	#writer.WriteOutGlobalElementIdArrayOn()
             	writer.SetFileName(path)
             	self.setInput(mesh, writer)
             	writer.Write()
@@ -153,13 +153,13 @@ class GmshExodusConverter():
                         					cellTypes.append(int(2))
 
                 			# Case: 3 - 4-node quadrangle
-               					if splitted[1] == '3':
-                    					if self.allUnique(splitted[-4:]):
+               				if splitted[1] == '3':
+                    				if self.allUnique(splitted[-4:]):
                         					cells.append(splitted[-4:])
                         					cellTypes.append(int(3))
                 			# Case: 4 - 4-node tetrahedron
-                				if splitted[1] == '4':
-                    					if self.allUnique(splitted[-4:]):
+                			if splitted[1] == '4':
+                    				if self.allUnique(splitted[-4:]):
                         					cells.append(splitted[-4:])
                         					cellTypes.append(int(4))
         		# Amount of cells found
