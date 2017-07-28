@@ -9,9 +9,7 @@ Are you using this code for research purposes? Please take the time to cite it u
 
 ## Usage:
 
-`python convert.py -i input.msh -o output.g -t element_type`
-
-element_type is an integer (see **Supported gmsh element types** section)
+`python convert.py -i input.msh -o output.g`
 
 ## Requirements
 
