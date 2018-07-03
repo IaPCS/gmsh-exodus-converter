@@ -11,6 +11,13 @@ Are you using this code for research purposes? Please take the time to cite it u
 
 `python convert.py -i input.msh -o output.g`
 
+Note that [meshio](https://github.com/nschloe/meshio) supprts the same functionality with
+
+```
+meshio-convert input.msh output.e
+```
+
+
 ## Requirements
 
 - VTK Toolkit >= 5.8 (with python bindings)
@@ -97,6 +104,8 @@ Mesh generated with gmesh | Exodus geometry visualized with paraview
 :------------------------:|:----------------------------------------:
 ![Mesh](./doc/3D_Cube_gmsh.png?raw=true "Mesh generated with gmesh")|![Exodus](./doc/3D_Cube_exodusII.png?raw=true "Mesh generated with gmesh")
 ![Mesh](./doc/cylind_mesh.png?raw=true "Mesh generated with gmesh")|![Exodus](./doc/cylind_exodus.png?raw=true "Mesh generated with gmesh")
+
+
 
 
 
